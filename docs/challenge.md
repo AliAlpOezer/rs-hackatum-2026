@@ -1,7 +1,7 @@
 # Challenge brief (paraphrased)
 
-Source: R&S 5-minute pitch at hackaTUM 2026 (deck is company restricted; this is
-our own summary).
+Source: R&S 5-minute pitch at hackaTUM 2026, shared on the hackaTUM Discord.
+This is our summary; the deck itself is not committed.
 
 ## Context
 

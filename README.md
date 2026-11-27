@@ -45,4 +45,4 @@ tracks/
   task2/         new-use-case research and pitch material
 ```
 
-The R&S slide deck is company restricted: do not commit it or copy it verbatim.
+The R&S slide deck is on the hackaTUM Discord; PDFs are gitignored to keep the repo light.
