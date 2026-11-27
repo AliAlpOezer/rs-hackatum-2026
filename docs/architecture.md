@@ -60,7 +60,7 @@ and visual quality of stitched patches.
 | Trajectory format | TUM text | KITTI, ROS bags | Timestamps included, evo-native, every SLAM repo can write it |
 | Language for glue | Python 3.11 | C++ | ORB-SLAM3 stays C++, all glue and eval in Python; PyTorch needs 3.11 |
 | Repo shape | Monorepo, one folder per track | One repo per track | One eval, one data layout, easy cross-track fusion |
-| Visibility | Private | Public | Challenge material is company restricted |
+| Visibility | Public, without the R&S deck | Private | Open for judges and the team; the company-restricted deck stays out (`*.pdf` is gitignored) |
 
 Note: ORB-SLAM3 is GPLv3. Keep it as an external build (submodule or script
 that clones it) so the rest of the repo can be licensed freely.
