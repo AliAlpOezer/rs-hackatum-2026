@@ -33,6 +33,11 @@ pipeline writes the same file format, so one script scores them all.
 2. [docs/architecture.md](docs/architecture.md) - how the tracks fit together.
 3. Your track folder's `README.md`.
 
+## Python env
+
+`uv sync` from the repo root builds one `.venv` for all members (`eval`, `data/tools`,
+`tracks/spatial-ai`). Run scripts with `uv run python ...`. Torch/CUDA for DPVO stays on Colab.
+
 ## Repo layout
 
 ```

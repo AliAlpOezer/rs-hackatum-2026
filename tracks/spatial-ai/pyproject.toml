@@ -1,0 +1,10 @@
+[project]
+name = "rs-spatial-ai"
+version = "0.0.0"
+description = "Learned VO/SLAM runners (DPVO etc.)"
+requires-python = ">=3.10"
+# torch + DPVO CUDA extensions are installed by envs/install_dpvo.sh (Colab), not here.
+dependencies = ["numpy", "pyyaml", "opencv-python-headless", "evo"]
+
+[tool.uv]
+package = false

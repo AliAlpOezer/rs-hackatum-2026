@@ -1,0 +1,16 @@
+[project]
+name = "rs-hackatum-2026"
+version = "0.0.0"
+description = "R&S @ hackaTUM 2026: handheld radar+camera pose estimation"
+requires-python = ">=3.10"
+dependencies = ["rs-eval", "rs-data-tools"]
+
+[tool.uv]
+package = false
+
+[tool.uv.workspace]
+members = ["eval", "data/tools", "tracks/spatial-ai"]
+
+[tool.uv.sources]
+rs-eval = { workspace = true }
+rs-data-tools = { workspace = true }

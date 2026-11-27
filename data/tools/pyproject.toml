@@ -1,0 +1,9 @@
+[project]
+name = "rs-data-tools"
+version = "0.0.0"
+description = "Dataset fetch and conversion scripts (EuRoC, ZED)"
+requires-python = ">=3.10"
+dependencies = ["numpy", "scipy", "opencv-python-headless", "pyyaml", "remotezip"]
+
+[tool.uv]
+package = false

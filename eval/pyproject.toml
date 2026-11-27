@@ -1,0 +1,9 @@
+[project]
+name = "rs-eval"
+version = "0.0.0"
+description = "Trajectory evaluation (evo) for results/<seq>/<method>.txt"
+requires-python = ">=3.10"
+dependencies = ["evo", "numpy"]
+
+[tool.uv]
+package = false

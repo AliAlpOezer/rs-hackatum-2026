@@ -3,9 +3,9 @@
 Scores every `results/<seq>/<method>.txt` (TUM format) against `data/<seq>/gt.txt`.
 
 ```bash
-pip install evo
-python eval/evaluate.py data/<seq>/gt.txt results/<seq>/*.txt            # monocular methods
-python eval/evaluate.py data/<seq>/gt.txt results/<seq>/*.txt --metric   # + SE(3) ATE for metric-scale methods
+uv sync   # once, from repo root
+uv run python eval/evaluate.py data/<seq>/gt.txt results/<seq>/*.txt            # monocular methods
+uv run python eval/evaluate.py data/<seq>/gt.txt results/<seq>/*.txt --metric   # + SE(3) ATE for metric-scale methods
 ```
 
 It prints a markdown row per method:
