@@ -6,6 +6,7 @@
 set -euo pipefail
 
 DPVO_COMMIT=0ac95b656d1fda91c271d2a106460d19ad966fc7  # main as of 2026-09-20
+ENVS_DIR=$(cd "$(dirname "$0")" && pwd)
 DIR=${1:-/content/DPVO}
 CACHE=${2:-}
 
@@ -25,8 +26,15 @@ fi
 git -C "$DIR" fetch -q origin "$DPVO_COMMIT"
 git -C "$DIR" checkout -q "$DPVO_COMMIT"
 
-# 2. Python dependencies; torch_scatter must match the installed torch + CUDA.
-pip install -q torch-scatter -f "https://data.pyg.org/whl/torch-${TORCH}+${CUDA}.html"
+# 2. Python dependencies. torch_scatter: a prebuilt wheel matching torch + CUDA if
+#    PyG publishes one, otherwise the pure-PyTorch shim (Colab's torch often runs
+#    ahead of PyG's wheels, and a source build without isolation is slow and fragile).
+if pip install -q --only-binary :all: torch-scatter -f "https://data.pyg.org/whl/torch-${TORCH}+${CUDA}.html" 2>/dev/null; then
+  echo "torch_scatter: prebuilt wheel"
+else
+  pip install -q "$ENVS_DIR/torch_scatter_shim"
+  echo "torch_scatter: no wheel for torch ${TORCH}+${CUDA}, installed pure-PyTorch shim"
+fi
 pip install -q numba tqdm einops pypose kornia plyfile evo yacs tensorboard opencv-python-headless pyyaml
 
 # 3. Weights (dpvo.pth). Skip the TartanAir training pickle.
@@ -48,6 +56,17 @@ else
   if [ ! -d "$DIR/thirdparty/eigen-3.4.0" ]; then
     wget -q -O /tmp/eigen.zip https://gitlab.com/libeigen/eigen/-/archive/3.4.0/eigen-3.4.0.zip
     unzip -q /tmp/eigen.zip -d "$DIR/thirdparty"
+  fi
+  # torch refuses to build extensions with an nvcc of a different major version.
+  TORCH_CUDA_VER=$(python -c "import torch; print(torch.version.cuda)")
+  NVCC_VER=$( (nvcc --version 2>/dev/null || /usr/local/cuda/bin/nvcc --version 2>/dev/null) | sed -n 's/.*release \([0-9.]*\).*/\1/p')
+  echo "nvcc ${NVCC_VER:-missing}, torch built with CUDA $TORCH_CUDA_VER"
+  if [ "${NVCC_VER%%.*}" != "${TORCH_CUDA_VER%%.*}" ]; then
+    PKG="cuda-toolkit-${TORCH_CUDA_VER%%.*}-${TORCH_CUDA_VER#*.}"
+    echo "installing $PKG to match torch"
+    apt-get update -qq && apt-get install -y -qq "$PKG" >/dev/null
+    export CUDA_HOME="/usr/local/cuda-${TORCH_CUDA_VER}" PATH="/usr/local/cuda-${TORCH_CUDA_VER}/bin:$PATH"
+    nvcc --version | tail -1
   fi
   export TORCH_CUDA_ARCH_LIST="$ARCH" MAX_JOBS=$(nproc)
   ( cd "$DIR" && pip wheel -q --no-build-isolation --no-deps . -w dist )
