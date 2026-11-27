@@ -59,3 +59,15 @@ DPVO EuRoC pipeline written and tested locally on a synthetic EuRoC sequence
 on a GPU**: the install script and the DPVO call itself are unverified until the
 Colab notebook `tracks/spatial-ai/notebooks/dpvo_euroc.ipynb` runs. Success
 check: MH_01_easy ATE Sim3 within DPVO's logged 0.063-0.105 m.
+
+## Colab moved to torch 2.14 + CUDA 13 (seen 2026-11-28)
+
+Colab T4 runtime reported torch 2.14.1, cu130, sm 7.5. PyG publishes no
+torch-scatter wheel for it, and pip's isolated source build fails ("Getting
+requirements to build wheel" without torch). DPVO only needs `scatter_sum`,
+`scatter_softmax`, `scatter_max(...)[0]`, so `envs/torch_scatter_shim/` provides
+them in plain PyTorch; `test_shim.py` checks them against per-group loops with
+DPVO's call shapes (passed on CPU torch). `install_dpvo.sh` uses a prebuilt
+wheel when one exists, else the shim. It also installs `cuda-toolkit-<torch CUDA>`
+via apt when Colab's nvcc major version differs from torch's; that branch and
+the CUDA 13 build of DPVO's extensions are not yet verified on Colab.

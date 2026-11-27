@@ -1,0 +1,11 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "torch-scatter"
+version = "0.0.0+shim"
+description = "Pure-PyTorch fallback for the torch_scatter functions DPVO uses"
+
+[tool.setuptools]
+packages = ["torch_scatter"]
