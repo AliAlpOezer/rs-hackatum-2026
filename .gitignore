@@ -1,0 +1,28 @@
+# data and outputs
+data/*
+!data/README.md
+!data/tools/
+results/*
+!results/summary.md
+
+# challenge material (company restricted)
+*.pdf
+
+# external builds
+tracks/orbslam3/ORB_SLAM3/
+third_party/
+checkpoints/
+*.pth
+*.ckpt
+
+# python
+__pycache__/
+*.pyc
+.venv/
+.env
+
+# os / editors
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
