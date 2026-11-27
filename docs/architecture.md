@@ -20,7 +20,7 @@ Every pipeline reads the same folder, produced once by the data owner:
 data/<seq>/
   frames/<timestamp_ns>.png   or video.mp4 + frames.csv (timestamp_ns,frame_idx)
   imu.csv                     timestamp_ns,wx,wy,wz,ax,ay,az   (rad/s, m/s^2, device frame)
-  calib.yaml                  intrinsics, distortion, T_cam_imu, time offset
+  calib.yaml                  intrinsics, distortion, T_imu_cam (camera pose in IMU frame), time offset
   gt.txt                      optional ground truth, TUM format
 ```
 

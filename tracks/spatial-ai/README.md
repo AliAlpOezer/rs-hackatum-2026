@@ -6,6 +6,14 @@ glimpse better than classical VI-SLAM on a handheld?** The classical baseline
 
 The full hour-by-hour plan is in [PLAN.md](PLAN.md). Experiment log: `notes.md`.
 
+## Run DPVO on EuRoC (Colab)
+
+Open [notebooks/dpvo_euroc.ipynb](notebooks/dpvo_euroc.ipynb) in Colab
+(File → Open notebook → GitHub → this repo), choose a GPU runtime, run all cells.
+It installs DPVO (`envs/install_dpvo.sh`, pinned commit, patched for PyTorch 2.x,
+wheel cached on Drive), fetches one sequence, runs `runners/dpvo_runner.py`
+and scores it with `eval/evaluate.py`. Expect MH_01_easy ATE around 0.06-0.11 m.
+
 ## Why learned methods might win here
 
 A handheld screener sweeps slowly, close to a body or surface, often over
@@ -38,7 +46,8 @@ are research-only, which matters to R&S.
 tracks/spatial-ai/
   PLAN.md      phases, gates, deliverables
   notes.md     experiment log (what ran, settings, numbers, takeaway)
-  envs/        environment files per method (cloud GPU)
+  notebooks/   Colab entry points, e.g. dpvo_euroc.ipynb
+  envs/        install scripts per method (Colab / CUDA Linux)
   runners/     data/<seq> -> results/<seq>/<method>.txt (TUM)
   scale/       IMU-based scale + gravity alignment
   stitch/      dense-geometry patch placement (the demo)
