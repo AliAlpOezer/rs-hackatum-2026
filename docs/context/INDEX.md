@@ -1,3 +1,3 @@
 # Context index
 
-- [dpvo-colab](dpvo-colab.md) - Colab as compute, DPVO interface and PyTorch 2.x patch, EuRoC partial download, evo RPE window, GPU run still pending.
+- [dpvo-colab](dpvo-colab.md) - Colab compute, DPVO setup and patches, EuRoC download, R&S dataset format and test split.
