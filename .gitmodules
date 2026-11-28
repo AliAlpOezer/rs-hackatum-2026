@@ -1,3 +1,6 @@
 [submodule "evo"]
 	path = eval/evo
 	url = https://github.com/MichaelGrupp/evo
+[submodule "ORB_SLAM3"]
+	path = ORB_SLAM3
+	url = git@github.com:JunkyDeveloper/ORB_SLAM3.git
