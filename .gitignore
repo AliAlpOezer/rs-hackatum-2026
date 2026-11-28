@@ -10,6 +10,8 @@ results/*
 
 # external builds
 tracks/orbslam3/ORB_SLAM3/
+tracks/orbslam3/Pangolin/
+tracks/orbslam3/*.log
 third_party/
 checkpoints/
 *.pth
