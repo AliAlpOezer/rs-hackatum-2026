@@ -65,7 +65,12 @@ Scored with `eval/evaluate.py --metric` against his `results/seq01/gt.txt`:
   `G:\My Drive\dataset_extracted\` (laptop mount, read-only use).
 - seq01 baseline exists (above); the Colab notebook
   `tracks/orbslam3/notebooks/orbslam3_baseline_colab.ipynb` (not yet run) is kept for
-  other sequences. Next on the learned side: DROID-SLAM
+  other sequences.
+- DROID-SLAM pipeline pushed on branch `spatial-ai/droid-slam` (7d81bbd): runner,
+  `envs/install_droid.sh`, `notebooks/droid_rs_colab.ipynb`; syntax/lint checked only,
+  never run on a GPU. Run it through the official Colab CLI in WSL, signed in as
+  alialp@live.com (2026-11-28); seq01 can go up with `colab upload` from
+  `G:\My Drive\dataset_extracted` if that account's Drive lacks the data. After it runs: compare droid_stereo vs orbslam3_stereo 1.8 mm. Next DROID-SLAM
   stereo as the first learned candidate.
 - This doc was written on a local `main` behind `origin/main`; `INDEX.md` will
   conflict on pull (both sides appended a line; keep both).
@@ -208,3 +213,66 @@ replaces the Pangolin window.
 - Push the R&S settings yaml and the exact run command (stereo-inertial with `IMU.fastInit: 1`?).
 - Sequence and exact metric behind "2 mm".
 - Is his machine reachable for us (SSH/Tailscale), or do we build our own copy?
+
+## IMU focus (Alp, 2026-11-28; DROID-SLAM dropped)
+
+Jonas `origin/orb-slam-3` 270af5a: stereo (no IMU) on seq01-10, scored by us with
+`eval/evaluate.py` against `trajectory.txt`: ATE SE3 1.2-2.0 mm on seq01-09,
+**9.5 mm on seq10** (fastest motion); Sim3 scale 0.988-1.006.
+
+IMU facts measured from `dataset_extracted` (seq01/05/10, script inline in the session):
+- ~199 Hz, irregular (dt p1-p99 2.4-8.2 ms); |a| mean 9.805-9.817 (accel scale fine).
+- **No static start**: gyro std 0.015-0.066 rad/s in the first 0.3 s, so noise and
+  biases cannot come from a still segment.
+- **Gentle excitation**: max ||a|-g| 0.40-1.14 m/s^2, max |w| 0.25-1.22 rad/s. Explains
+  ORB-SLAM3's "not enough acceleration" init gate and weak IMU scale observability.
+- **Time offset**: gyro-norm vs GT angular-speed cross-correlation peaks at -16 ms on
+  seq10 (corr 0.990), -1/-2 ms on seq05/01. Sign: IMU stamps appear ~16 ms behind;
+  verify by shifting and re-scoring. ORB-SLAM3 has no td key: shift in the converter.
+
+Proposed IMU work, in order: (1) per-sequence time offset estimated against the stereo
+trajectory (works on test seqs), (2) gyro bias init from gyro vs stereo rotation rate,
+fastInit, (3) noise/random-walk from residuals, then CEM/CMA-ES leave-one-sequence-out
+on noise scales, (4) learned gyro/accel correction network (1D CNN over IMU windows,
+Brossard-style denoising) writing a corrected imu.csv, no core change, (5) per-sequence
+fallback to stereo-only by a consistency check.
+
+### Time-offset check (2026-11-28, scripts `../jonas_res/offsets.py`, `shift.py`, outside the repo)
+
+Rotation-rate cross-correlation, 0.5 ms steps, seq01-10:
+- **gyro vs stereo (camera-IMU offset)**: -0.5 to +3 ms on seq01/02/04-07, but
+  **-31 ms seq03, -11.5 seq08, -10 seq09, -12 seq10** (corr 0.97-0.99). The offset varies
+  per recording, so estimate it per sequence against the stereo trajectory (test seqs have no GT).
+- **stereo vs GT**: a constant -6.5 to -8.5 ms on all ten. Shifting the stereo output by
+  +-7.5 / -15 ms does *not* reduce ATE (seq01 1.9 -> 2.1-2.9 mm; seq10 9.5 -> 9.1-10.0 mm).
+  So it is an artifact of rotation-rate comparison, not a usable output timing fix.
+  Do not shift outputs.
+- Still to do: rerun stereo-inertial with IMU timestamps shifted by the per-sequence
+  gyro-vs-stereo offset (seq03, seq08-10 first) and compare with the unshifted run.
+  Needs the ORB-SLAM3 build (Jonas, or the Colab CLI in WSL).
+
+## Own IMU fusion instead of ORB-SLAM3 inertial (Alp, 2026-11-28)
+
+Decision: no more ORB-SLAM3 work on our side. Treat Jonas's stereo trajectory as a
+frozen visual measurement and build our own IMU fusion on top (loosely coupled).
+Options assessed (from knowledge, not yet prototyped):
+- ESKF (error-state EKF): IMU propagation 200 Hz, stereo pose updates 30 Hz; states
+  p, v, R, gyro/accel bias, time offset td. Plus an RTS smoother: submission is offline,
+  so the smoother can use future data.
+- Batch factor graph (GTSAM, IMU preintegration + VO between-factors): most accurate
+  offline; heavier dependency.
+- Invariant EKF / UKF: better consistency, marginal gain at 20 s.
+- ML: (a) differentiable ESKF in PyTorch, noise/offset parameters learned by gradient
+  descent on GT error, leave-one-sequence-out; (b) learned per-frame covariance (small
+  MLP on VO quality + IMU stats), AI-IMU style; (c) gyro denoising CNN (Brossard 2020);
+  (d) learned inertial odometry (TLIO/RoNIN) rejected: built for pedestrians over long
+  windows, not mm-level 20 s handheld.
+Recommended: one PyTorch ESKF + RTS smoother (classical baseline), then make its
+parameters learnable, then add learned covariance. Target: beat stereo-only
+1.2-2.0 mm (seq01-09) and 9.5 mm (seq10).
+
+Step 1 built: `tracks/imu_fusion/eskf.py` (ESKF + RTS, torch float64), results in
+`tracks/imu_fusion/notes.md`: never worse than stereo, RPE 1 s down ~0.1-0.3 mm, ATE ~flat.
+Next: step 2, learn the noise parameters by gradient descent, leave-one-sequence-out.
+
+Step 2 done: learned constant noise = hand tuning (see `tracks/imu_fusion/notes.md`); next is step 3, adaptive per-frame trust.
