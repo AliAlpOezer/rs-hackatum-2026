@@ -1,0 +1,10 @@
+seq01 600/600 frames, 23 KFs
+seq02 599/599 frames, 21 KFs
+seq03 600/600 frames, 17 KFs
+seq04 601/601 frames, 29 KFs
+seq05 601/601 frames, 23 KFs
+seq06 600/600 frames, 12 KFs
+seq07 601/601 frames, 15 KFs
+seq08 601/601 frames, 12 KFs
+seq09 601/601 frames, 21 KFs
+seq10 600/600 frames, 75 KFs
