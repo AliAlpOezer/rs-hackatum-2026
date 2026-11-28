@@ -221,10 +221,13 @@ def main() -> None:
         T[:3, :3] = quat_to_R(row[4:8])
         T[:3, 3] = torch.tensor(row[1:4])
         T_wb.append(T @ T_c_b)
-    # gravity in the stereo world: mean linear acceleration over a handheld clip is ~0
+    # gravity in the stereo world: mean linear acceleration over a handheld clip is ~0.
+    # Only IMU samples inside the camera time range: a trajectory that lost tracking covers
+    # part of the clip, and samples outside it have no matching orientation.
     Rb = np.array([T[:3, :3].numpy() for T in T_wb])
-    idx = np.clip(np.searchsorted(t_cam, t_imu), 0, len(t_cam) - 1)
-    f_w = np.einsum("nij,nj->ni", Rb[idx], acc)
+    inside = (t_imu >= t_cam[0]) & (t_imu <= t_cam[-1])
+    idx = np.clip(np.searchsorted(t_cam, t_imu[inside]), 0, len(t_cam) - 1)
+    f_w = np.einsum("nij,nj->ni", Rb[idx], acc[inside])
     g_w = torch.tensor(-f_w.mean(0))
 
     states = run(torch.tensor(t_imu).tolist(), torch.tensor(acc), torch.tensor(gyr),

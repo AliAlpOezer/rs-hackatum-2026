@@ -91,7 +91,19 @@ step 1 table above. Earlier `eskf.py` revisions differ only by tensor noise inpu
 and the optional `rscale` hook (step 3), so the default path is unchanged.
 
 evo comparison (2026-11-28): `uv run python tracks/imu_fusion/compare_evo.py <raw_root> results [--all]`
-compares ORB-SLAM3 stereo (`f_seqNN.txt`) with `results/seqNN/orbslam3-imu-fusion.txt` (step 1, same
-as `eskf.txt`); table + per-sequence plots in `results/imu_fusion/compare/`. evo RPE is in the local
-frame (relative pose), so it differs from `score.py`'s world-frame RPE. Means (ATE / RPE 1 s mm / RPE
-rot deg): stereo 2.35 / 2.63 / 0.228, fusion 2.28 / 2.47 / 0.219.
+compares ORB-SLAM3 stereo, `results/seqNN/orbslam3-imu-fusion.txt` (step 1 ESKF) and ORB-SLAM3's own
+stereo-inertial mode; table + per-sequence plots in `results/imu_fusion/compare/`. evo RPE is in the
+local frame (relative pose), so it differs from `score.py`'s world-frame RPE.
+Stereo was rerun on main (`results_euroc_color/stereo/seqNN/f_seqNN.txt`, differs from the 270af5a
+run), so `orbslam3-imu-fusion.txt` was regenerated from the new stereo. Means (ATE / RPE 1 s mm /
+RPE rot deg): stereo 2.17 / 2.40 / 0.229, fusion 2.11 / 2.22 / 0.220, stereo-inertial 2.35 / 2.32 /
+0.229 (seq04 lost tracking, 218/602 poses). Fusion beats stereo on ATE in all 10 sequences and
+beats stereo-inertial on ATE in 7 of 10; stereo-inertial wins seq10 RPE (7.81 vs 8.26 mm).
+
+ESKF on stereo-inertial (2026-11-28): same filter, input = ORB-SLAM3 stereo-inertial
+(`results/seqNN/orbslam3-stereo-inertial-imu-fusion.txt`, `si_fusion` in compare_evo.py).
+Means: stereo-inertial 2.35 / 2.32 / 0.229 -> si_fusion 2.29 / 2.22 / 0.224; ATE better on all 10
+sequences, best seq10 RPE overall (7.38 mm). Still behind fusion on plain stereo in ATE (2.11).
+Bug fixed on the way: gravity was averaged over all IMU samples, also those outside the camera
+time range; seq04 stereo-inertial (218/602 poses) gave |g| 9.16 and ATE 4.35 mm. Now only IMU
+inside the trajectory's time range (|g| 9.81, ATE 1.26 mm); full-coverage outputs move < 0.004 mm.
