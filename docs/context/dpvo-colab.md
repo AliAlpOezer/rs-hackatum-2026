@@ -71,3 +71,16 @@ DPVO's call shapes (passed on CPU torch). `install_dpvo.sh` uses a prebuilt
 wheel when one exists, else the shim. It also installs `cuda-toolkit-<torch CUDA>`
 via apt when Colab's nvcc major version differs from torch's; that branch and
 the CUDA 13 build of DPVO's extensions are not yet verified on Colab.
+
+## R&S dataset facts (2026-11-28)
+
+Checked from `dataset_extracted.zip`, seq01 converted and round-tripped:
+- ZED X Mini, rectified stereo, 960x600, fx = fy = 370.37, 30 fps, baseline
+  0.04996 m, 601 frames per recording (about 20 s).
+- `imu.csv` columns are `timestamp_ms,ax,ay,az,gx,gy,gz` (accel first, gyro in
+  deg/s), irregular about 200 Hz, starts about 0.4 s before the first frame.
+- `calibration.json` `imu_to_left_camera` maps IMU -> left camera
+  (T_cam_imu); `rs_to_seq.py` stores its inverse as `T_imu_cam`.
+- `trajectory.txt` (seq01-10): `timestamp_ms tx ty tz qx qy qz qw`, first pose at
+  the origin with a small non-identity rotation, first two rows identical.
+- Teams pick one task; the detailed PDF contains download credentials, never commit it.

@@ -6,6 +6,22 @@ the team drive and place them here locally.
 Every sequence follows the layout in [docs/architecture.md](../docs/architecture.md#contract-1-sequence-layout-input).
 Converters from the R&S raw format go in `data/tools/`.
 
+## R&S dataset
+
+`dataset_extracted.zip` (7.5 GB, 20 recordings) from the challenge download.
+Keep it out of git (too big for free Git LFS); share it via a team Drive folder.
+Convert each recording:
+
+```bash
+python data/tools/rs_to_seq.py <dataset_extracted>/seq01 data/seq01
+```
+
+This decodes both videos to `frames/` and `frames_right/` (601 frames each for
+seq01), converts the IMU to ns and rad/s, writes `calib.yaml` (no distortion,
+`T_imu_cam`, baseline) and `gt.txt` (seq01-10 only), and keeps the original
+timestamp strings in `timestamps_ms.txt` for the submission.
+`eval/to_submission.py` turns any TUM result back into the R&S format.
+
 ## Tools
 
 - `tools/fetch_euroc.py <seq> <dest>`: downloads one EuRoC sequence (only its own
