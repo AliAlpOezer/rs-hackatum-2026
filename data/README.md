@@ -26,10 +26,18 @@ timestamp strings in `timestamps_ms.txt` for the submission.
 
 - `tools/fetch_euroc.py <seq> <dest>`: downloads one EuRoC sequence (only its own
   zip, via HTTP range requests; ETH hosts 6-13 GB group archives). Needs `remotezip`.
-- `tools/zed_to_euroc.py <src> <out>`: R&S ZED X Mini sequences (`left.mp4`,
+- `tools/zed_to_euroc.py <src> <out> --gray`: R&S ZED X Mini sequences (`left.mp4`,
   `right.mp4`, `imu.csv`, `calibration.json`, `trajectory.txt`) -> EuRoC ASL
-  (`mav0/`, stereo + IMU, GT in IMU frame). `<src>` is one seq or a folder of
-  `seq*`. Needs ffmpeg.
+  (`mav0/`, stereo + IMU, GT in IMU frame) plus everything ORB-SLAM3 needs per
+  sequence: `timestamps.txt`, `orbslam3_{stereo,stereo_inertial,mono_inertial}.yaml`
+  (from that sequence's calibration), `calibration.json`, `timestamps_ms.txt`
+  (for `eval/to_submission.py`) and `conversion.yaml` (dropped frames, IMU timing,
+  IMU noise source). Frames without IMU coverage are dropped (ORB-SLAM3's inertial
+  loaders read past the IMU vector otherwise). IMU noise is a flagged placeholder
+  unless `--imu-noise quiet`. `<src>` is one seq or a folder of `seq*`. Needs ffmpeg.
+  Running it: [tracks/orbslam3](../tracks/orbslam3/README.md).
+- `tools/synth_zed.py <out>`: synthetic sequence in the raw R&S format (stereo
+  room + IMU + trajectory), for testing the pipeline without the dataset.
 - `tools/euroc_to_seq.py <euroc_seq> data/<seq>`: EuRoC ASL -> shared layout,
   ground truth converted from IMU frame to camera frame.
 

@@ -45,7 +45,7 @@ docs/            challenge brief, roadmap, architecture, decisions
 data/            sequence layout (raw data is gitignored)
 eval/            trajectory evaluation (evo) and result table
 tracks/
-  orbslam3/      ORB-SLAM3 mono-inertial pipeline
+  orbslam3/      ORB-SLAM3 stereo-inertial pipeline (stereo, mono-inertial too)
   spatial-ai/    learned and foundation-model pose estimation
   task2/         new-use-case research and pitch material
 ```

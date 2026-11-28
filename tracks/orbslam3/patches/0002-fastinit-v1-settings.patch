@@ -1,0 +1,49 @@
+diff --git a/include/Settings.h b/include/Settings.h
+index beab7de..f2a8e3d 100644
+--- a/include/Settings.h
++++ b/include/Settings.h
+@@ -91,6 +91,7 @@ namespace ORB_SLAM3 {
+         float imuFrequency() {return imuFrequency_;}
+         Sophus::SE3f Tbc() {return Tbc_;}
+         bool insertKFsWhenLost() {return insertKFsWhenLost_;}
++        bool fastInit() {return fastInit_;}
+ 
+         float depthMapFactor() {return depthMapFactor_;}
+ 
+@@ -192,6 +193,7 @@ namespace ORB_SLAM3 {
+         float imuFrequency_;
+         Sophus::SE3f Tbc_;
+         bool insertKFsWhenLost_;
++        bool fastInit_ = false;
+ 
+         /*
+          * RGBD stuff
+diff --git a/src/Settings.cc b/src/Settings.cc
+index 93a50be..0686ac1 100644
+--- a/src/Settings.cc
++++ b/src/Settings.cc
+@@ -429,6 +429,10 @@ namespace ORB_SLAM3 {
+         else{
+             insertKFsWhenLost_ = true;
+         }
++
++        // Optional: 1 skips the stereo-inertial "not enough acceleration" check at init
++        readParameter<int>(fSettings,"IMU.fastInit",found,false);
++        fastInit_ = found && readParameter<int>(fSettings,"IMU.fastInit",found,false) != 0;
+     }
+ 
+     void Settings::readRGBD(cv::FileStorage& fSettings) {
+diff --git a/src/Tracking.cc b/src/Tracking.cc
+index 5191451..f33d483 100644
+--- a/src/Tracking.cc
++++ b/src/Tracking.cc
+@@ -604,6 +604,9 @@ void Tracking::newParameterLoader(Settings *settings) {
+     Sophus::SE3f Tbc = settings->Tbc();
+     mInsertKFsLost = settings->insertKFsWhenLost();
+     mImuFreq = settings->imuFrequency();
++    mFastInit = settings->fastInit();
++    if(mFastInit)
++        cout << "Fast IMU initialization. Acceleration is not checked \n";
+     mImuPer = 0.001; //1.0 / (double) mImuFreq;     //TODO: ESTO ESTA BIEN?
+     float Ng = settings->noiseGyro();
+     float Na = settings->noiseAcc();
