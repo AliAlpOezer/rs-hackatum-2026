@@ -13,7 +13,7 @@ import copy
 from pathlib import Path
 
 import numpy as np
-from evo.core import metrics, sync
+from evo.core import filters, metrics, sync
 from evo.tools import file_interface
 
 
@@ -28,7 +28,10 @@ def rpe(ref, est, window_s: float) -> float:
     dt = float(np.median(np.diff(est.timestamps)))
     m = metrics.RPE(metrics.PoseRelation.translation_part, delta=max(1, round(window_s / dt)),
                     delta_unit=metrics.Unit.frames, all_pairs=False)
-    m.process_data((ref, est))
+    try:
+        m.process_data((ref, est))
+    except filters.FilterException:  # trajectory shorter than the window (e.g. lost tracking)
+        return float("nan")
     return m.get_statistic(metrics.StatisticsType.rmse)
 
 

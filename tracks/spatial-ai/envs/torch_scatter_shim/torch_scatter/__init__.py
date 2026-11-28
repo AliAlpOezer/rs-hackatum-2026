@@ -1,4 +1,4 @@
-"""Pure-PyTorch stand-in for the torch_scatter functions DPVO uses.
+"""Pure-PyTorch stand-in for the torch_scatter functions DPVO and DROID-SLAM use.
 
 Installed only when no prebuilt torch-scatter wheel matches the runtime's
 torch/CUDA (e.g. Colab torch 2.14 + CUDA 13). Semantics follow torch_scatter:
@@ -36,6 +36,13 @@ def scatter_sum(src, index, dim=-1, out=None, dim_size=None):
 
 
 scatter_add = scatter_sum
+
+
+def scatter_mean(src, index, dim=-1, out=None, dim_size=None):
+    """Mean per group; empty groups yield 0 (count clamped to 1, as torch_scatter does)."""
+    total = scatter_sum(src, index, dim, out, dim_size)
+    count = scatter_sum(torch.ones_like(src), index, dim, dim_size=total.shape[dim % src.dim()])
+    return total / count.clamp(min=1)
 
 
 def scatter_max(src, index, dim=-1, out=None, dim_size=None):

@@ -1,4 +1,4 @@
-"""Check the shim against explicit per-group loops, with DPVO's call shapes.
+"""Check the shim against explicit per-group loops, with DPVO's and DROID-SLAM's call shapes.
 
     python tracks/spatial-ai/envs/torch_scatter_shim/test_shim.py
 """
@@ -9,7 +9,7 @@ from pathlib import Path
 import torch
 
 sys.path.insert(0, str(Path(__file__).parent))
-from torch_scatter import scatter_max, scatter_softmax, scatter_sum  # noqa: E402
+from torch_scatter import scatter_max, scatter_mean, scatter_softmax, scatter_sum
 
 
 def loop_reduce(src, index, n, fn):
@@ -50,6 +50,12 @@ def main():
         if (index == g).any():
             ref[g] = r[index == g].max()
     assert torch.allclose(got, ref), "max"
+
+    # DROID droid_net.py: scatter_mean(net, ix, dim=1) on (1, E, C, H, W), index (E,)
+    net = torch.randn(1, E, 4, 3, 5, dtype=torch.float64)
+    got = scatter_mean(net, index, dim=1)
+    assert got.shape[1] == int(index.max()) + 1, "mean shape"
+    assert torch.allclose(got, loop_reduce(net, index, got.shape[1], lambda x: x.mean(1))), "mean"
 
     # half precision under autocast-like inputs
     xh = x.half()
