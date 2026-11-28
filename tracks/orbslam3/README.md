@@ -15,6 +15,13 @@ uv run python data/tools/euroc_to_seq.py ../dataset_euroc/seq01 data/seq01   # g
 uv run python eval/evaluate.py data/seq01/gt.txt results/seq01/*.txt --metric
 ```
 
+All sequences at once (convert, stereo check, three modes, benchmark table in
+`<work>/reports/summary.md`):
+
+```bash
+tracks/orbslam3/run_all.sh ../dataset_extracted ../rs_work
+```
+
 `run.sh <seq> [stereo|stereo_inertial|mono_inertial]` writes
 `results/<seq>/orbslam3_<mode>.txt` (TUM, `T_world_cam`, seconds) and keeps the
 raw ORB-SLAM3 output and log in `results/<seq>/raw/`. It prints what goes into
