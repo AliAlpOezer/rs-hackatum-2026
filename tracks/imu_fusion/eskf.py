@@ -102,8 +102,11 @@ class Noise:
     rot: float = 3.5e-3      # rad, stereo rotation measurement
 
 
-def run(t_imu, acc, gyr, t_cam, T_wb_meas, g_w, noise: Noise):
-    """Forward ESKF over the merged IMU/camera timeline, then RTS. Returns smoothed (p, R) at camera times."""
+def run(t_imu, acc, gyr, t_cam, T_wb_meas, g_w, noise: Noise, rscale=None):
+    """Forward ESKF over the merged IMU/camera timeline, then RTS. Returns smoothed (p, R) at camera times.
+
+    rscale: optional (n_cam, 2) multipliers on the stereo position / rotation variances per frame.
+    """
     I3, Z3 = torch.eye(3), torch.zeros(3, 3)
     p = T_wb_meas[0][:3, 3].clone()
     R = T_wb_meas[0][:3, :3].clone()
@@ -166,7 +169,8 @@ def run(t_imu, acc, gyr, t_cam, T_wb_meas, g_w, noise: Noise):
         # stereo pose update
         Tm = T_wb_meas[j]
         r = torch.cat([Tm[:3, 3] - p, so3_log(R.T @ Tm[:3, :3])])
-        S = H @ P @ H.T + Rm
+        Rj = Rm if rscale is None else Rm * torch.cat([rscale[j, :1].expand(3), rscale[j, 1:].expand(3)])
+        S = H @ P @ H.T + Rj
         K = P @ H.T @ torch.linalg.inv(S)
         dx = K @ r
         P = (torch.eye(15) - K @ H) @ P

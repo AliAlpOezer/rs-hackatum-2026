@@ -48,3 +48,9 @@ Conclusion: learning six constant noise values matches hand tuning, no further g
 the fold-to-fold spread (5x on gyro) says the loss is flat in these parameters. A
 constant-noise filter cannot fix seq10 (stereo-drift error, not jitter). Next lever:
 step 3, per-frame adaptive trust (learned covariance), or a better visual measurement.
+
+Step 3 (2026-11-28, done): `train_trust.py`, MLP 5->16->2 (tanh, zero-init last layer)
+on per-frame features (stereo speed /0.2, stereo rot rate /0.5, gyro rate /0.5,
+|stereo-gyro rate| /0.1, ||a|-g| /0.5) -> variance multipliers in [e^-2, e^2] on stereo
+pos/rot; base noise = step 1 with pos 4 mm. Adam lr 0.02, 40 iters/fold, same folds/loss.
+Outputs `results/seqNN/eskf_trust.txt`; multipliers and log in `results/imu_fusion/`.
