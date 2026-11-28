@@ -2,7 +2,6 @@
 data/*
 !data/README.md
 !data/tools/
-results/*
 !results/summary.md
 
 # challenge PDFs: shared on the hackaTUM Discord, kept out of git
