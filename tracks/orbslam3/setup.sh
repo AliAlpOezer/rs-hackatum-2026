@@ -22,7 +22,7 @@ JOBS="${JOBS:-$(nproc)}"
 if [[ "${1:-}" == "--deps" ]]; then
   sudo apt-get update
   sudo apt-get install -y build-essential cmake git libeigen3-dev libopencv-dev \
-    libboost-serialization-dev libssl-dev libglew-dev libepoxy-dev libgl1-mesa-dev xvfb
+    libboost-serialization-dev libssl-dev libglew-dev libepoxy-dev libgl1-mesa-dev xvfb ffmpeg
 fi
 
 # Pangolin (viewer library; installed into a local prefix, no sudo)
