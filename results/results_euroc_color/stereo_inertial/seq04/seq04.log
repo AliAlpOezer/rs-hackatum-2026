@@ -42,11 +42,12 @@ SLAM settings:
 	-Sequence FPS: 30
 	-Stereo baseline: 0.049958176910877228
 	-Stereo depth threshold : 48.5
-	-Gyro noise: 0.00016999999934341758
-	-Accelerometer noise: 0.0020000000949949026
-	-Gyro walk: 1.8999999156221747e-05
+	-Gyro noise: 0.0017999999690800905
+	-Accelerometer noise: 0.0054999999701976776
+	-Gyro walk: 0.0001900000061141327
 	-Accelerometer walk: 0.0030000000260770321
 	-IMU frequency: 198.39999389648438
+	-IMU init min motion: 0.004999999888241291 m, min time: 3 s, reset-check time: 10 s
 	-Features per image: 1900
 	-ORB scale factor: 1.2000000476837158
 	-ORB number of scales: 8
@@ -68,11 +69,23 @@ not IMU meas
 not IMU meas
 First KF:0; Map init KF:0
 New Map created with 920 points
+IMU-CHECK KF 13 t=904.33140000000003056 dist=0.03175279498100281 mTinit=3.20007395744323730
+IMU-CHECK KF 14 t=904.39806099999998423 dist=0.01296070124953985 mTinit=3.20007395744323730
+IMU-CHECK KF 15 t=904.46473700000001372 dist=0.01003523170948029 mTinit=3.20007395744323730
+IMU-CHECK KF 16 t=904.53138599999999769 dist=0.01037014648318291 mTinit=3.20007395744323730
+IMU-CHECK KF 17 t=904.59805400000004738 dist=0.01000644639134407 mTinit=3.20007395744323730
+IMU-CHECK KF 18 t=904.69807500000001710 dist=0.01182976178824902 mTinit=3.20007395744323730
+IMU-CHECK KF 19 t=904.79805299999998169 dist=0.01341369003057480 mTinit=3.20007395744323730
+IMU-CHECK KF 20 t=904.96474399999999605 dist=0.01531568355858326 mTinit=3.20007395744323730
+IMU-CHECK KF 21 t=905.03142500000001291 dist=0.01209762878715992 mTinit=3.20007395744323730
+IMU-CHECK KF 22 t=905.09805400000004738 dist=0.00651574879884720 mTinit=3.20007395744323730
+IMU-CHECK KF 23 t=905.16472799999996823 dist=0.00629857275635004 mTinit=3.20007395744323730
+IMU-CHECK KF 24 t=905.23138100000005579 dist=0.00557752698659897 mTinit=3.20007395744323730
+IMU-CHECK KF 25 t=905.33142399999996996 dist=0.00618098443374038 mTinit=3.20007395744323730
+IMU-CHECK KF 26 t=905.39805999999998676 dist=0.00520085822790861 mTinit=3.20007395744323730
+IMU-CHECK KF 27 t=905.46474899999998343 dist=0.00410518888384104 mTinit=3.20007395744323730
 Not enough motion for initializing. Reseting...
 TRACK: Reset map because local mapper set the bad imu flag 
-LM: Reseting current map in Local Mapping...
-LM: End reseting Local Mapping...
-LM: Reset free the mutex
 LM: Active map reset recieved
 LM: Active map reset, waiting...
 LM: Reseting current map in Local Mapping...
@@ -81,111 +94,79 @@ LM: Reset free the mutex
 LM: Active map reset, Done!!!
 mnFirstFrameId = 2
 mnInitialFrameId = 0
-78 Frames set to lost
+134 Frames set to lost
 not IMU meas
-First KF:12; Map init KF:0
-New Map created with 807 points
-Not enough motion for initializing. Reseting...
-LM: Reseting current map in Local Mapping...
-LM: End reseting Local Mapping...
-LM: Reset free the mutex
+First KF:28; Map init KF:0
+New Map created with 1003 points
+IMU-CHECK KF 41 t=908.86470599999995557 dist=0.02194609679281712 mTinit=3.19994902610778809
+IMU-CHECK KF 42 t=908.93137200000001030 dist=0.00900676287710667 mTinit=3.19994902610778809
+IMU-CHECK KF 43 t=909.09804099999996652 dist=0.01090353354811668 mTinit=3.19994902610778809
+IMU-CHECK KF 44 t=909.39802999999994881 dist=0.02019095420837402 mTinit=3.19994902610778809
+IMU-CHECK KF 45 t=909.86469399999998586 dist=0.02892094478011131 mTinit=3.19994902610778809
+IMU-CHECK KF 46 t=910.36473300000000108 dist=0.03325124084949493 mTinit=3.19994902610778809
+IMU-CHECK KF 47 t=910.86577599999998256 dist=0.04200493916869164 mTinit=3.19994902610778809
+IMU-CHECK KF 48 t=911.09805700000003981 dist=0.04129246622323990 mTinit=3.19994902610778809
+IMU-CHECK KF 49 t=911.26475200000004406 dist=0.02858931012451649 mTinit=3.19994902610778809
+IMU-CHECK KF 50 t=911.39813700000001973 dist=0.02222341671586037 mTinit=3.19994902610778809
+IMU-CHECK KF 51 t=911.49808599999994385 dist=0.01883132755756378 mTinit=3.19994902610778809
+IMU-CHECK KF 52 t=911.59809700000005250 dist=0.01706796698272228 mTinit=3.19994902610778809
+IMU-CHECK KF 53 t=911.69807700000001205 dist=0.01895783841609955 mTinit=3.19994902610778809
+IMU-CHECK KF 54 t=911.83151299999997264 dist=0.02433825656771660 mTinit=3.19994902610778809
+IMU-CHECK KF 55 t=911.96475499999996828 dist=0.02775590494275093 mTinit=3.19994902610778809
+IMU-CHECK KF 56 t=912.09805300000004991 dist=0.02545444667339325 mTinit=3.19994902610778809
+IMU-CHECK KF 57 t=912.19808499999999185 dist=0.02033835835754871 mTinit=3.19994902610778809
+IMU-CHECK KF 58 t=912.43140200000004825 dist=0.02587428316473961 mTinit=3.19994902610778809
+IMU-CHECK KF 59 t=912.66473599999994804 dist=0.03625753521919250 mTinit=3.19994902610778809
+IMU-CHECK KF 60 t=912.79807300000004489 dist=0.02955652773380280 mTinit=3.19994902610778809
+IMU-CHECK KF 61 t=912.86475099999995564 dist=0.01655641198158264 mTinit=3.19994902610778809
+IMU-CHECK KF 62 t=912.93141300000002047 dist=0.01151027344167233 mTinit=3.19994902610778809
+IMU-CHECK KF 63 t=912.99806499999999687 dist=0.01115880254656076 mTinit=3.19994902610778809
+IMU-CHECK KF 64 t=913.06474700000001121 dist=0.01049638167023659 mTinit=3.19994902610778809
+IMU-CHECK KF 65 t=913.13141599999994469 dist=0.00943505857139826 mTinit=3.19994902610778809
+IMU-CHECK KF 66 t=913.19808499999999185 dist=0.00892049260437489 mTinit=3.19994902610778809
+IMU-CHECK KF 67 t=913.29807000000005246 dist=0.00973825342953205 mTinit=3.19994902610778809
+IMU-CHECK KF 68 t=913.36475299999995059 dist=0.00856250058859587 mTinit=3.19994902610778809
+IMU-CHECK KF 69 t=913.43141600000001290 dist=0.00619703158736229 mTinit=3.19994902610778809
+IMU-CHECK KF 70 t=913.49807299999997667 dist=0.00571874156594276 mTinit=3.19994902610778809
+IMU-CHECK KF 71 t=913.56474500000001626 dist=0.00507750455290079 mTinit=3.19994902610778809
+IMU-CHECK KF 72 t=913.63141199999995479 dist=0.00425477605313063 mTinit=3.19994902610778809
 Not enough motion for initializing. Reseting...
 TRACK: Reset map because local mapper set the bad imu flag 
-LM: Reseting current map in Local Mapping...
-LM: End reseting Local Mapping...
-LM: Reset free the mutex
 LM: Active map reset recieved
 LM: Active map reset, waiting...
 LM: Reseting current map in Local Mapping...
 LM: End reseting Local Mapping...
 LM: Reset free the mutex
 LM: Active map reset, Done!!!
-mnFirstFrameId = 82
-mnInitialFrameId = 80
-155 Frames set to lost
+mnFirstFrameId = 138
+mnInitialFrameId = 136
+377 Frames set to lost
 not IMU meas
-First KF:24; Map init KF:12
-New Map created with 1009 points
-Not enough motion for initializing. Reseting...
-TRACK: Reset map because local mapper set the bad imu flag 
-LM: Reseting current map in Local Mapping...
-LM: End reseting Local Mapping...
-LM: Reset free the mutex
-LM: Active map reset recieved
-LM: Active map reset, waiting...
-LM: Reseting current map in Local Mapping...
-LM: End reseting Local Mapping...
-LM: Reset free the mutex
-LM: Active map reset, Done!!!
-mnFirstFrameId = 161
-mnInitialFrameId = 159
-235 Frames set to lost
-not IMU meas
-First KF:36; Map init KF:24
-New Map created with 843 points
-Not enough motion for initializing. Reseting...
-TRACK: Reset map because local mapper set the bad imu flag 
-LM: Reseting current map in Local Mapping...
-LM: End reseting Local Mapping...
-LM: Reset free the mutex
-LM: Active map reset recieved
-LM: Active map reset, waiting...
-LM: Reseting current map in Local Mapping...
-LM: End reseting Local Mapping...
-LM: Reset free the mutex
-LM: Active map reset, Done!!!
-mnFirstFrameId = 243
-mnInitialFrameId = 241
-319 Frames set to lost
-not IMU meas
-First KF:50; Map init KF:36
-New Map created with 824 points
-Not enough motion for initializing. Reseting...
-LM: Reseting current map in Local Mapping...
-LM: End reseting Local Mapping...
-LM: Reset free the mutex
-Not enough motion for initializing. Reseting...
-LM: Reseting current map in Local Mapping...
-LM: End reseting Local Mapping...
-LM: Reset free the mutex
-Not enough motion for initializing. Reseting...
-TRACK: Reset map because local mapper set the bad imu flag 
-LM: Reseting current map in Local Mapping...
-LM: End reseting Local Mapping...
-LM: Reset free the mutex
-LM: Active map reset recieved
-LM: Active map reset, waiting...
-LM: Reseting current map in Local Mapping...
-LM: End reseting Local Mapping...
-LM: Reset free the mutex
-LM: Active map reset, Done!!!
-mnFirstFrameId = 329
-mnInitialFrameId = 327
-421 Frames set to lost
-not IMU meas
-First KF:65; Map init KF:50
-New Map created with 844 points
-Not enough motion for initializing. Reseting...
-LM: Reseting current map in Local Mapping...
-LM: End reseting Local Mapping...
-LM: Reset free the mutex
-Not enough motion for initializing. Reseting...
-TRACK: Reset map because local mapper set the bad imu flag 
-LM: Reseting current map in Local Mapping...
-LM: End reseting Local Mapping...
-LM: Reset free the mutex
-LM: Active map reset recieved
-LM: Active map reset, waiting...
-LM: Reseting current map in Local Mapping...
-LM: End reseting Local Mapping...
-LM: Reset free the mutex
-LM: Active map reset, Done!!!
-mnFirstFrameId = 433
-mnInitialFrameId = 431
-504 Frames set to lost
-not IMU meas
-First KF:78; Map init KF:65
-New Map created with 718 points
+First KF:73; Map init KF:28
+New Map created with 694 points
+IMU-CHECK KF 86 t=917.03141900000002806 dist=0.02120475098490715 mTinit=3.19999289512634277
+IMU-CHECK KF 87 t=917.09805900000003476 dist=0.01087171584367752 mTinit=3.19999289512634277
+IMU-CHECK KF 88 t=917.19807500000001710 dist=0.01102675031870604 mTinit=3.19999289512634277
+IMU-CHECK KF 89 t=917.29805699999997159 dist=0.01319794356822968 mTinit=3.19999289512634277
+IMU-CHECK KF 90 t=917.39806899999996403 dist=0.01477399654686451 mTinit=3.19999289512634277
+IMU-CHECK KF 91 t=917.49804900000003727 dist=0.01706244423985481 mTinit=3.19999289512634277
+IMU-CHECK KF 92 t=917.56474900000000616 dist=0.01539346203207970 mTinit=3.19999289512634277
+IMU-CHECK KF 93 t=917.63138700000001791 dist=0.01291849277913570 mTinit=3.19999289512634277
+IMU-CHECK KF 94 t=917.69804899999996906 dist=0.01250795088708401 mTinit=3.19999289512634277
+IMU-CHECK KF 95 t=917.79805099999998674 dist=0.01441099029034376 mTinit=3.19999289512634277
+IMU-CHECK KF 96 t=917.93137999999999010 dist=0.01751983910799026 mTinit=3.19999289512634277
+IMU-CHECK KF 97 t=918.09805100000005496 dist=0.01883000880479813 mTinit=3.19999289512634277
+IMU-CHECK KF 98 t=918.26471700000001874 dist=0.02003541216254234 mTinit=3.19999289512634277
+IMU-CHECK KF 99 t=918.43137999999999010 dist=0.02088393270969391 mTinit=3.19999289512634277
+IMU-CHECK KF 100 t=918.93140700000003562 dist=0.03526780381798744 mTinit=3.19999289512634277
+IMU-CHECK KF 101 t=919.46472300000004907 dist=0.05682861804962158 mTinit=3.73330879211425781
+IMU-CHECK KF 102 t=919.76495799999997871 dist=0.05384725332260132 mTinit=4.03354358673095703
+IMU-CHECK KF 103 t=919.96473900000000867 dist=0.04049924388527870 mTinit=4.03354358673095703
+IMU-CHECK KF 104 t=920.09808299999997416 dist=0.02993826940655708 mTinit=4.03354358673095703
+IMU-CHECK KF 105 t=920.23150399999997262 dist=0.02422258444130421 mTinit=4.03354358673095703
+IMU-CHECK KF 106 t=920.43143799999995736 dist=0.02820177003741264 mTinit=4.03354358673095703
+IMU-CHECK KF 107 t=920.66473900000005415 dist=0.03578174859285355 mTinit=4.03354358673095703
+IMU-CHECK KF 108 t=920.86473699999999099 dist=0.03431986272335052 mTinit=4.03354358673095703
 Shutdown
 
 Saving camera trajectory (TUM, biggest map) to f_seq04.txt ...

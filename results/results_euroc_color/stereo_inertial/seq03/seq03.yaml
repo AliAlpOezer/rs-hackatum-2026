@@ -41,10 +41,10 @@ IMU.T_b_c1: !!opencv-matrix
   dt: f
   data: [0.999942059, -0.007423526464, -0.007795163279, -0.03446766366, 0.007420570877, 0.9999723648, -0.0004080089835, -0.004611904262, 0.007797976476, 0.0003501407763, 0.999969526, -0.0002705709946, 0.0, 0.0, 0.0, 1.0]
 # IMU noise: PLACEHOLDER (EuRoC ADIS16448 values), not measured for the ZED X Mini
-IMU.NoiseGyro: 0.00017
-IMU.NoiseAcc: 0.002
-IMU.GyroWalk: 1.9e-05
-IMU.AccWalk: 0.003
+IMU.NoiseGyro: 1.8e-3
+IMU.NoiseAcc: 5.5e-3
+IMU.GyroWalk: 1.9e-4
+IMU.AccWalk: 3.0e-3
 IMU.Frequency: 198.9
 IMU.InsertKFsWhenLost: 1
 # 1 skips the stereo-inertial 'not enough acceleration' init check;
@@ -67,3 +67,7 @@ Viewer.ViewpointX: 0.0
 Viewer.ViewpointY: -0.7
 Viewer.ViewpointZ: -1.8
 Viewer.ViewpointF: 500.0
+IMU.initMinMotion: 0.005
+IMU.initMinTime: 3.0
+IMU.initResetTime: 10.0
+IMU.initDebug: 1
