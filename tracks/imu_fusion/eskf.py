@@ -110,9 +110,10 @@ def run(t_imu, acc, gyr, t_cam, T_wb_meas, g_w, noise: Noise):
     v = (T_wb_meas[1][:3, 3] - T_wb_meas[0][:3, 3]) / (t_cam[1] - t_cam[0])
     bg, ba = torch.zeros(3), torch.zeros(3)
     P = torch.diag(torch.tensor([1e-6] * 3 + [1e-2] * 3 + [1e-5] * 3 + [1e-4] * 3 + [1e-2] * 3))
-    Qc = torch.diag(torch.cat([torch.full((3,), noise.accel**2), torch.full((3,), noise.gyro**2),
-                               torch.full((3,), noise.gyro_walk**2), torch.full((3,), noise.accel_walk**2)]))
-    Rm = torch.diag(torch.cat([torch.full((3,), noise.pos**2), torch.full((3,), noise.rot**2)]))
+    def d3(x):
+        return torch.as_tensor(x).reshape(1).expand(3) ** 2
+    Qc = torch.diag(torch.cat([d3(noise.accel), d3(noise.gyro), d3(noise.gyro_walk), d3(noise.accel_walk)]))
+    Rm = torch.diag(torch.cat([d3(noise.pos), d3(noise.rot)]))
     H = torch.zeros(6, 15)
     H[:3, :3] = I3
     H[3:, 6:9] = I3
