@@ -54,3 +54,38 @@ on per-frame features (stereo speed /0.2, stereo rot rate /0.5, gyro rate /0.5,
 |stereo-gyro rate| /0.1, ||a|-g| /0.5) -> variance multipliers in [e^-2, e^2] on stereo
 pos/rot; base noise = step 1 with pos 4 mm. Adam lr 0.02, 40 iters/fold, same folds/loss.
 Outputs `results/seqNN/eskf_trust.txt`; multipliers and log in `results/imu_fusion/`.
+
+Step 3 results: `python tracks/imu_fusion/score.py "<raw R&S root>" results`, all four
+stages on the same timestamps (ATE SE3 mm / RPE 1 s mm / rotation RMS deg; steps 2-3
+held out by 5-fold CV, step 1 = hand-set noise with pos 4 mm):
+
+| Seq | ORB-SLAM3 stereo | step 1 ESKF | step 2 learned | step 3 trust |
+|---|---|---|---|---|
+| seq01 | 1.91 / 1.93 / 0.289 | 1.87 / 1.82 / 0.285 | 1.86 / 1.83 / 0.293 | 1.86 / 1.82 / 0.283 |
+| seq02 | 1.92 / 1.72 / 0.173 | 1.88 / 1.63 / 0.174 | 1.89 / 1.64 / 0.208 | 1.89 / 1.63 / 0.181 |
+| seq03 | 1.21 / 1.27 / 0.481 | 1.17 / 1.20 / 0.481 | 1.17 / 1.20 / 0.478 | 1.17 / 1.20 / 0.483 |
+| seq04 | 1.58 / 1.65 / 0.409 | 1.57 / 1.57 / 0.420 | 1.56 / 1.57 / 0.492 | 1.55 / 1.57 / 0.471 |
+| seq05 | 1.26 / 1.30 / 0.121 | 1.21 / 1.22 / 0.124 | 1.22 / 1.23 / 0.123 | 1.22 / 1.23 / 0.123 |
+| seq06 | 1.25 / 1.47 / 0.073 | 1.19 / 1.37 / 0.070 | 1.19 / 1.35 / 0.068 | 1.19 / 1.38 / 0.068 |
+| seq07 | 1.17 / 1.37 / 0.112 | 1.07 / 1.21 / 0.108 | 1.10 / 1.27 / 0.115 | 1.08 / 1.22 / 0.109 |
+| seq08 | 1.65 / 1.80 / 0.285 | 1.54 / 1.57 / 0.282 | 1.56 / 1.61 / 0.282 | 1.54 / 1.58 / 0.282 |
+| seq09 | 2.04 / 1.94 / 0.217 | 1.98 / 1.77 / 0.224 | 1.97 / 1.79 / 0.222 | 1.98 / 1.79 / 0.266 |
+| seq10 | 9.47 / 9.06 / 0.763 | 9.28 / 8.60 / 0.743 | 9.33 / 8.74 / 0.749 | 9.35 / 8.79 / 0.710 |
+| mean | 2.35 / 2.35 / 0.292 | 2.28 / 2.20 / 0.291 | 2.28 / 2.22 / 0.303 | 2.28 / 2.22 / 0.297 |
+
+Learned multipliers (`trust_log.json`) split by fold: seq01-04 and seq09-10 learn pos
+x0.2-1.0, rot x4.5-7.3 (trust stereo rotation less); seq05-08 learn pos x1.6-2.0, rot
+x0.7-1.3. Opposite directions on different folds = no transferable signal in these features.
+
+Conclusion: every fusion stage beats raw stereo (ATE -0.07 mm, RPE -0.13 mm on average),
+but the gain is all in step 1. Learning constant noise (step 2) or per-frame trust
+(step 3) does not beat the hand-set filter; step 3 only recovers part of the rotation
+step 2 lost (0.303 -> 0.297 deg vs 0.291 for step 1). Caveat: step 1's pos 4 mm was
+picked from two settings after seeing all sequences, so it has a small selection edge.
+seq10 stays at ~9.3 mm: the error is stereo drift, which reweighting cannot remove.
+Next lever is a better visual measurement, not more filter tuning.
+
+Reproducibility: `results/seqNN/eskf.txt` was regenerated with the final `eskf.py
+--pos 4e-3` (the original step 1 run kept only seq01/seq10); seq01, 05, 10 match the
+step 1 table above. Earlier `eskf.py` revisions differ only by tensor noise inputs (step 2)
+and the optional `rscale` hook (step 3), so the default path is unchanged.
