@@ -36,6 +36,9 @@ timestamp strings in `timestamps_ms.txt` for the submission.
   loaders read past the IMU vector otherwise). IMU noise is a flagged placeholder
   unless `--imu-noise quiet`. `<src>` is one seq or a folder of `seq*`. Needs ffmpeg.
   Running it: [tracks/orbslam3](../tracks/orbslam3/README.md).
+- `tools/check_stereo.py <euroc_seq>`: left/right consistency as ORB-SLAM3 sees it:
+  stereo match rate, vertical offset, swapped cameras, frame offset between the videos.
+  A healthy pair gives ~40-90 % (synthetic: 89 %); swapped gives ~6 %.
 - `tools/synth_zed.py <out>`: synthetic sequence in the raw R&S format (stereo
   room + IMU + trajectory), for testing the pipeline without the dataset.
 - `tools/euroc_to_seq.py <euroc_seq> data/<seq>`: EuRoC ASL -> shared layout,

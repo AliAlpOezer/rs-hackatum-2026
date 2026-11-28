@@ -9,6 +9,10 @@ the IMU body pose T_world_body for IMU_* sensors (stereo_inertial, mono_inertial
 the left camera pose T_world_cam otherwise. --frame body applies
 T_world_cam = T_world_body @ T_body_cam with T_body_cam = IMU.T_b_c1 from the settings.
 Only the largest map is saved; frames tracked in other maps are missing.
+Time unit is detected from the frame spacing: upstream writes ns, forks that
+save TUM (e.g. JunkyDeveloper/ORB_SLAM3 ras-changes) write seconds.
+Check which pose such a fork saves: upstream's SaveTrajectoryTUM writes the camera
+pose even for inertial runs, which then needs --frame camera.
 """
 
 import argparse
@@ -40,7 +44,8 @@ def main() -> None:
     if len(d) == 0:
         raise SystemExit(f"{args.est} is empty (ORB-SLAM3 never initialized?)")
     d = d[np.unique(d[:, 0], return_index=True)[1]]  # sorted, one pose per timestamp
-    t_s = d[:, 0] * 1e-9
+    step = float(np.median(np.diff(d[:, 0]))) if len(d) > 1 else 0.0
+    t_s = d[:, 0] * (1e-9 if step > 1e3 else 1.0)  # 30 fps: ~3.3e7 in ns, ~0.033 in s
     R, p = Rotation.from_quat(d[:, 4:8]), d[:, 1:4]
     if args.frame == "body":
         if args.settings is None:
@@ -50,7 +55,7 @@ def main() -> None:
         R = R * Rotation.from_matrix(T_bc[:3, :3])
 
     if len(t_s) > 1 and not 1e-3 < np.median(np.diff(t_s)) < 10:
-        raise SystemExit(f"{args.est}: odd frame spacing {np.median(np.diff(t_s)):.3g} s, expected ns input")
+        raise SystemExit(f"{args.est}: odd frame spacing {np.median(np.diff(t_s)):.3g} s after unit detection")
     args.out.parent.mkdir(parents=True, exist_ok=True)
     np.savetxt(args.out, np.column_stack([t_s, p, R.as_quat()]), fmt="%.9f",
                header="timestamp_s tx ty tz qx qy qz qw  (T_world_cam, left camera)")
