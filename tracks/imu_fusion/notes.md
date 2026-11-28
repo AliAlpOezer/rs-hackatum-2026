@@ -89,3 +89,9 @@ Reproducibility: `results/seqNN/eskf.txt` was regenerated with the final `eskf.p
 --pos 4e-3` (the original step 1 run kept only seq01/seq10); seq01, 05, 10 match the
 step 1 table above. Earlier `eskf.py` revisions differ only by tensor noise inputs (step 2)
 and the optional `rscale` hook (step 3), so the default path is unchanged.
+
+evo comparison (2026-11-28): `uv run python tracks/imu_fusion/compare_evo.py <raw_root> results [--all]`
+compares ORB-SLAM3 stereo (`f_seqNN.txt`) with `results/seqNN/orbslam3-imu-fusion.txt` (step 1, same
+as `eskf.txt`); table + per-sequence plots in `results/imu_fusion/compare/`. evo RPE is in the local
+frame (relative pose), so it differs from `score.py`'s world-frame RPE. Means (ATE / RPE 1 s mm / RPE
+rot deg): stereo 2.35 / 2.63 / 0.228, fusion 2.28 / 2.47 / 0.219.
